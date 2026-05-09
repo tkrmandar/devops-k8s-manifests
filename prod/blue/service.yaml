@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-manager-api-blue-svc
+  namespace: prod
+  labels:
+    app: task-manager-api
+    environment: prod
+    slot: blue
+spec:
+  selector:
+    app: task-manager-api
+    slot: blue
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP

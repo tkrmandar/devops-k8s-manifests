@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-manager-api-svc
+  namespace: dev
+  labels:
+    app: task-manager-api
+    environment: dev
+spec:
+  selector:
+    app: task-manager-api
+    environment: dev
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP
