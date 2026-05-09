@@ -1,0 +1,68 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prod-readonly-role
+  namespace: prod
+  labels:
+    environment: prod
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "endpoints"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prod-readonly-binding
+  namespace: prod
+  labels:
+    environment: prod
+subjects:
+- kind: Group
+  name: dev-team           # ← dev team can only READ prod
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: prod-readonly-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Senior DevOps role — full access to prod
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prod-admin-role
+  namespace: prod
+  labels:
+    environment: prod
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets", "endpoints"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prod-admin-binding
+  namespace: prod
+  labels:
+    environment: prod
+subjects:
+- kind: Group
+  name: devops-team        # ← only devops team can modify prod
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: prod-admin-role
+  apiGroup: rbac.authorization.k8s.io
