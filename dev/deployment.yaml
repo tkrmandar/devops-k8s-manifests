@@ -6,7 +6,6 @@ metadata:
   labels:
     app: task-manager-api
     environment: dev
-    version: "1.0.0"
 spec:
   replicas: 1
   selector:
@@ -23,11 +22,10 @@ spec:
       labels:
         app: task-manager-api
         environment: dev
-        version: "1.0.0"
     spec:
       containers:
       - name: task-manager-api
-        image: mterkhedkar/task-manager-api:c81e353e274893f72e89f5d1572f6ce706032b99
+        image: YOUR_DOCKERHUB_USERNAME/task-manager-api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -43,6 +41,10 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "200m"
+        securityContext:
+          runAsNonRoot: true        # ← Kyverno requires this
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
         livenessProbe:
           httpGet:
             path: /health
@@ -57,4 +59,3 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           failureThreshold: 3
-      restartPolicy: Always
