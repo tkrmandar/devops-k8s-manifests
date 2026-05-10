@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: task-manager-api
-        image: mterkhedkar/task-manager-api:554a07c1f810efef3071c81a0a258bf526b1946f
+        image: YOUR_DOCKERHUB_USERNAME/task-manager-api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
